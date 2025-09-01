@@ -1,0 +1,26 @@
+# SBT
+target/
+project/target/
+project/project/
+
+# IDE
+.idea/
+.vscode/
+.metals/
+.bloop/
+.bsp/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Spark
+spark-warehouse/
+derby.log
+metastore_db/
+
+# Assembly
+*assembly*.jar

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+    </Console>
+  </Appenders>
+  <Loggers>
+    <!-- Reduce Spark logging noise -->
+    <Logger name="org.apache.spark" level="WARN"/>
+    <Logger name="org.apache.hadoop" level="WARN"/>
+    <Logger name="org.eclipse.jetty" level="WARN"/>
+    <Logger name="akka" level="WARN"/>
+    <Logger name="org.apache.spark.storage.BlockManager" level="ERROR"/>
+    <Logger name="org.apache.spark.scheduler.DAGScheduler" level="ERROR"/>
+    <Logger name="org.apache.spark.sql.execution.datasources.FileSourceStrategy" level="WARN"/>
+    
+    <!-- Application logger -->
+    <Logger name="com.example" level="INFO"/>
+    
+    <Root level="INFO">
+      <AppenderRef ref="Console"/>
+    </Root>
+  </Loggers>
+</Configuration>
