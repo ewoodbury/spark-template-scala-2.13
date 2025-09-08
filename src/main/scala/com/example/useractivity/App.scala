@@ -3,7 +3,7 @@ package com.example.useractivity
 import scopt.OParser
 import com.example.sparkutils.SparkPlatform
 
-object Main {
+object App {
   def main(args: Array[String]): Unit = {
     val builder = OParser.builder[Config]
     val parser = {
