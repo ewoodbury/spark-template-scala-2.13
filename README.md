@@ -15,21 +15,35 @@ Note: If you want to try out using Scala 3 with Spark, check out the Scala 3 ver
 
 ## Project Structure
 
-```
+```text
 ├── build.sbt                    # Build configuration
 ├── project/
 │   └── plugins.sbt             # SBT plugins
 ├── src/
 │   ├── main/
-│   │   ├── scala/              # Main Scala source files
-│   │   └── resources/          # Resources (log4j2.xml, etc.)
+│   │   ├── scala/
+│   │   │   ├── com/example/useractivity/
+│   │   │   │   ├── App.scala                  # Sample application entrypoint
+│   │   │   │   └── UserActivity.scala         # Core ETL job logic
+│   │   │   └── sparktoolbox/                  # Core Spark utilities
+│   │   │       ├── SparkPlatformTrait.scala   # Trait for platform abstraction
+│   │   │       ├── SparkPlatform.scala        # Production Spark session manager
+│   │   │       ├── PlatformProvider.scala     # Factory for platform selection
+│   │   │       ├── Fetchers.scala             # Type-safe reading utilities
+│   │   │       └── Writers.scala              # Production-grade writing utilities
+│   │   └── resources/                         # Configurations (log4j2.xml, etc.)
 │   └── test/
-│       ├── scala/              # Test source files
-│       └── resources/          # Test resources
+│       ├── scala/
+│       │   ├── com/example/useractivity/
+│       │   │   ├── TestE2EUserActivity.scala  # End-to-end pipeline tests
+│       │   │   └── UserActivityTransformationsTest.scala # Unit tests for transformations
+│       │   └── com/example/test/
+│       │       └── SparkTestBase.scala        # Base trait for parallel test execution
+│       └── resources/                         # Test resources
 ├── .scalafmt.conf              # Scalafmt configuration
 ├── .scalafix.conf              # Scalafix configuration
 └── .gitignore                  # Git ignore patterns
-```
+``` 
 
 ## Getting Started
 
