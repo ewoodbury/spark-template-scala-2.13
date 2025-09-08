@@ -31,7 +31,7 @@ import scala.util.{Try, Success, Failure}
   */
 object SparkPlatform extends SparkPlatformTrait {
 
-  @volatile private var _spark: Option[SparkSession]                         = None
+  @volatile private var _spark: Option[SparkSession] = None
   private val _localTables: TrieMap[String, org.apache.spark.sql.Dataset[_]] = TrieMap.empty
 
   /** Determines if the platform is running in local mode. Local mode is enabled when SPARK_MODE
@@ -68,7 +68,7 @@ object SparkPlatform extends SparkPlatformTrait {
             case Failure(exception) =>
               throw new RuntimeException(
                 s"Failed to create SparkSession: ${exception.getMessage}",
-                exception
+                exception,
               )
           }
           _spark = Some(session)
@@ -124,7 +124,7 @@ object SparkPlatform extends SparkPlatformTrait {
       .config("spark.sql.catalog.spark_catalog.type", "hive")
       .config(
         "spark.sql.extensions",
-        "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions"
+        "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions",
       )
 
       // Performance optimizations for large-scale processing
@@ -200,11 +200,11 @@ object SparkPlatform extends SparkPlatformTrait {
   def getSessionInfo: Map[String, String] =
     _spark.map { session =>
       Map(
-        "applicationId"   -> session.sparkContext.applicationId,
+        "applicationId" -> session.sparkContext.applicationId,
         "applicationName" -> session.sparkContext.appName,
-        "master"          -> session.sparkContext.master,
-        "version"         -> session.version,
-        "isLocal"         -> isLocal.toString
+        "master" -> session.sparkContext.master,
+        "version" -> session.version,
+        "isLocal" -> isLocal.toString,
       )
     }.getOrElse(Map("status" -> "No active SparkSession"))
 }

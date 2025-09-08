@@ -31,7 +31,7 @@ object App {
           .required()
           .action((x, c) => c.copy(outputTable = x))
           .text("Output table name"),
-        help("help").text("prints this usage text")
+        help("help").text("prints this usage text"),
       )
     }
 
@@ -50,7 +50,7 @@ object App {
             config.endDate,
             config.userEventsTable,
             config.purchasesTable,
-            config.outputTable
+            config.outputTable,
           )
 
         } finally

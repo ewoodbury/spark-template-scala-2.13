@@ -11,14 +11,14 @@ object UserActivity {
       endDate: Int,
       userEventsTable: String,
       purchasesTable: String,
-      outputTable: String
+      outputTable: String,
   ): Unit = {
     implicit val spark: SparkSession = PlatformProvider.platform.spark
     import spark.implicits._
 
     // Read source tables
-    val userEvents   = Fetchers.readTableAsDataset[UserEvent](userEventsTable)
-    val purchases    = Fetchers.readTableAsDataset[PurchaseTransaction](purchasesTable)
+    val userEvents = Fetchers.readTableAsDataset[UserEvent](userEventsTable)
+    val purchases = Fetchers.readTableAsDataset[PurchaseTransaction](purchasesTable)
     val userProfiles = Fetchers.readTableAsDataset[UserProfile]("lookup_user")
 
     // Apply transformations

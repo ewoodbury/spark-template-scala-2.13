@@ -5,5 +5,5 @@ case class Config(
     endDate: Int = 0,
     userEventsTable: String = "",
     purchasesTable: String = "",
-    outputTable: String = ""
+    outputTable: String = "",
 )

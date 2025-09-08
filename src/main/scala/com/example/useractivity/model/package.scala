@@ -11,7 +11,7 @@ case class UserEvent(
     session_id: String,
     page_url: String,
     device_type: String,
-    partition_date: Int // YYYYMMDD format
+    partition_date: Int, // YYYYMMDD format
 )
 
 // Source Table 2: Purchase Transactions
@@ -24,7 +24,7 @@ case class PurchaseTransaction(
     payment_method: String,
     currency: String,
     is_refunded: Boolean,
-    partition_date: Int // YYYYMMDD format
+    partition_date: Int, // YYYYMMDD format
 )
 
 // Lookup Table: User Profiles
@@ -36,7 +36,7 @@ case class UserProfile(
     age_group: String,
     country: String,
     subscription_tier: String,
-    is_active: Boolean
+    is_active: Boolean,
 )
 
 // Intermediate Schema: Filtered User Events
@@ -49,7 +49,7 @@ case class FilteredUserEvent(
     page_url: String,
     device_type: String,
     partition_date: Int,
-    row_number: Long
+    row_number: Long,
 )
 
 // Intermediate Schema: Filtered Purchase Transactions
@@ -63,7 +63,7 @@ case class FilteredPurchaseTransaction(
     currency: String,
     is_refunded: Boolean,
     partition_date: Int,
-    row_number: Long
+    row_number: Long,
 )
 
 // Intermediate Schema: Enriched User Events
@@ -79,7 +79,7 @@ case class EnrichedUserEvent(
     age_group: String,
     country: String,
     subscription_tier: String,
-    partition_date: Int
+    partition_date: Int,
 )
 
 // Intermediate Schema: Enriched Purchase Transactions
@@ -96,7 +96,7 @@ case class EnrichedPurchaseTransaction(
     age_group: String,
     country: String,
     subscription_tier: String,
-    partition_date: Int
+    partition_date: Int,
 )
 
 // Final Output Schema: User Activity Summary
@@ -115,5 +115,5 @@ case class UserActivitySummary(
     most_common_event_type: String,
     first_event_timestamp: Timestamp,
     last_event_timestamp: Timestamp,
-    partition_date: Int
+    partition_date: Int,
 )

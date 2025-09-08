@@ -55,7 +55,7 @@ object PlatformProvider {
   private def loadTestPlatform: Option[SparkPlatformTrait] =
     try {
       // Try to load the test platform from the updated package structure
-      val clazz  = Class.forName("sparktoolbox.TestSparkPlatform$")
+      val clazz = Class.forName("sparktoolbox.TestSparkPlatform$")
       val module = clazz.getField("MODULE$").get(null).asInstanceOf[SparkPlatformTrait]
       Some(module)
     } catch {
@@ -86,8 +86,8 @@ object PlatformProvider {
     *   true if running in a test context, false otherwise
     */
   private def isTestContext: Boolean = {
-    val threadName   = Thread.currentThread().getName
-    val isScalaTest  = threadName.contains("ScalaTest")
+    val threadName = Thread.currentThread().getName
+    val isScalaTest = threadName.contains("ScalaTest")
     val isSbtTesting = System.getProperty("sbt.testing", "false") == "true"
 
     isScalaTest || isSbtTesting
@@ -103,17 +103,17 @@ object PlatformProvider {
     val platformType = if (isTest) {
       loadTestPlatform match {
         case Some(_) => "TestSparkPlatform"
-        case None    => "SparkPlatform (test platform not available)"
+        case None => "SparkPlatform (test platform not available)"
       }
     } else {
       "SparkPlatform (production)"
     }
 
     Map(
-      "isTestContext"    -> isTest.toString,
-      "threadName"       -> Thread.currentThread().getName,
-      "sbtTesting"       -> System.getProperty("sbt.testing", "false"),
-      "selectedPlatform" -> platformType
+      "isTestContext" -> isTest.toString,
+      "threadName" -> Thread.currentThread().getName,
+      "sbtTesting" -> System.getProperty("sbt.testing", "false"),
+      "selectedPlatform" -> platformType,
     )
   }
 }

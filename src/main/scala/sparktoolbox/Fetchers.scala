@@ -61,7 +61,7 @@ object Fetchers {
       case Failure(exception) =>
         throw new RuntimeException(
           s"Failed to read table '$tableName' as DataFrame: ${exception.getMessage}",
-          exception
+          exception,
         )
     }
   }
@@ -98,7 +98,7 @@ object Fetchers {
       case Failure(exception) =>
         throw new RuntimeException(
           s"Failed to read table '$tableName' as Dataset[${encoder.clsTag.runtimeClass.getSimpleName}]: ${exception.getMessage}",
-          exception
+          exception,
         )
     }
   }
@@ -136,7 +136,7 @@ object Fetchers {
       case Failure(exception) =>
         throw new RuntimeException(
           s"Failed to read table '$tableName' with columns [${columns.mkString(", ")}]: ${exception.getMessage}",
-          exception
+          exception,
         )
     }
   }
@@ -181,7 +181,7 @@ object Fetchers {
   private def readFromLocalStorage(tableName: String): org.apache.spark.sql.Dataset[_] =
     platform.getLocalTable(tableName).getOrElse {
       throw new RuntimeException(
-        s"Table '$tableName' not found in local storage. Available tables: ${listTables().mkString(", ")}"
+        s"Table '$tableName' not found in local storage. Available tables: ${listTables().mkString(", ")}",
       )
     }
 

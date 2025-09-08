@@ -57,7 +57,7 @@ object Writers {
   def writeDataFrameToTable(
       df: DataFrame,
       tableName: String,
-      mode: SaveMode = SaveMode.Overwrite
+      mode: SaveMode = SaveMode.Overwrite,
   ): Unit = {
     validateInputs(df, tableName)
 
@@ -73,7 +73,7 @@ object Writers {
       case Failure(exception) =>
         throw new RuntimeException(
           s"Failed to write DataFrame to table '$tableName' with mode $mode: ${exception.getMessage}",
-          exception
+          exception,
         )
     }
   }
@@ -99,7 +99,7 @@ object Writers {
   def writeDatasetToTable[T](
       ds: Dataset[T],
       tableName: String,
-      mode: SaveMode = SaveMode.Overwrite
+      mode: SaveMode = SaveMode.Overwrite,
   ): Unit = {
     validateInputs(ds.toDF(), tableName) // Dataset extends DataFrame
 
@@ -115,7 +115,7 @@ object Writers {
       case Failure(exception) =>
         throw new RuntimeException(
           s"Failed to write Dataset to table '$tableName' with mode $mode: ${exception.getMessage}",
-          exception
+          exception,
         )
     }
   }
@@ -142,18 +142,18 @@ object Writers {
       df: DataFrame,
       tableName: String,
       partitionColumns: Seq[String],
-      mode: SaveMode = SaveMode.Overwrite
+      mode: SaveMode = SaveMode.Overwrite,
   ): Unit = {
     validateInputs(df, tableName)
     require(partitionColumns.nonEmpty, "Partition columns cannot be empty")
     require(partitionColumns.forall(_.nonEmpty), "Partition column names cannot be empty")
 
     // Validate that partition columns exist in the DataFrame
-    val dfColumns      = df.columns.toSet
+    val dfColumns = df.columns.toSet
     val missingColumns = partitionColumns.filterNot(dfColumns.contains)
     require(
       missingColumns.isEmpty,
-      s"Partition columns not found in DataFrame: ${missingColumns.mkString(", ")}"
+      s"Partition columns not found in DataFrame: ${missingColumns.mkString(", ")}",
     )
 
     Try {
@@ -170,7 +170,7 @@ object Writers {
         throw new RuntimeException(
           s"Failed to write partitioned DataFrame to table '$tableName' with partitions [${partitionColumns
               .mkString(", ")}]: ${exception.getMessage}",
-          exception
+          exception,
         )
     }
   }
@@ -192,7 +192,7 @@ object Writers {
       ds: Dataset[T],
       tableName: String,
       partitionColumns: Seq[String],
-      mode: SaveMode = SaveMode.Overwrite
+      mode: SaveMode = SaveMode.Overwrite,
   ): Unit =
     writeDataFrameToTablePartitioned(ds.toDF(), tableName, partitionColumns, mode)
 
@@ -216,7 +216,7 @@ object Writers {
       df: DataFrame,
       tableName: String,
       mode: SaveMode = SaveMode.Overwrite,
-      targetFileSizeMB: Int = 128
+      targetFileSizeMB: Int = 128,
   ): Unit = {
     validateInputs(df, tableName)
     require(targetFileSizeMB > 0, "Target file size must be positive")
@@ -226,7 +226,7 @@ object Writers {
         writeToLocalStorage(df, tableName, mode)
       } else {
         // Calculate optimal partition count based on data size and target file size
-        val estimatedSizeMB   = estimateDataFrameSizeMB(df)
+        val estimatedSizeMB = estimateDataFrameSizeMB(df)
         val optimalPartitions = Math.max(1, (estimatedSizeMB / targetFileSizeMB).toInt)
 
         val optimizedDf = if (optimalPartitions != df.rdd.getNumPartitions) {
@@ -237,7 +237,7 @@ object Writers {
 
         optimizedDf.write
           .mode(mode)
-          .option("compression", "snappy")            // Good balance of compression and speed
+          .option("compression", "snappy") // Good balance of compression and speed
           .option("path", s"/data/tables/$tableName") // Explicit path for better control
           .saveAsTable(tableName)
       }
@@ -247,7 +247,7 @@ object Writers {
       case Failure(exception) =>
         throw new RuntimeException(
           s"Failed to write optimized DataFrame to table '$tableName': ${exception.getMessage}",
-          exception
+          exception,
         )
     }
   }
@@ -257,7 +257,7 @@ object Writers {
   private def writeToLocalStorage(
       data: org.apache.spark.sql.Dataset[_],
       tableName: String,
-      mode: SaveMode
+      mode: SaveMode,
   ): Unit =
     mode match {
       case SaveMode.Overwrite | SaveMode.ErrorIfExists | SaveMode.Ignore =>
@@ -290,7 +290,7 @@ object Writers {
       df: DataFrame,
       tableName: String,
       partitionColumns: Seq[String],
-      mode: SaveMode
+      mode: SaveMode,
   ): Unit =
     df.write
       .mode(mode)
@@ -302,10 +302,10 @@ object Writers {
     */
   private def estimateDataFrameSizeMB(df: DataFrame): Double = {
     // This is a rough estimation - in production you might want more sophisticated sizing
-    val numRows          = df.count()
-    val numCols          = df.columns.length
+    val numRows = df.count()
+    val numCols = df.columns.length
     val avgBytesPerField = 50 // Rough estimate
-    val estimatedBytes   = numRows * numCols * avgBytesPerField
+    val estimatedBytes = numRows * numCols * avgBytesPerField
     estimatedBytes / (1024.0 * 1024.0) // Convert to MB
   }
 

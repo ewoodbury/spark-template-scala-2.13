@@ -10,7 +10,7 @@ object UserActivityTransformations {
   def filterAndDedupeUserEvents(
       userEvents: Dataset[UserEvent],
       startDate: Int,
-      endDate: Int
+      endDate: Int,
   )(implicit spark: SparkSession): Dataset[FilteredUserEvent] = {
     import spark.implicits._
 
@@ -28,7 +28,7 @@ object UserActivityTransformations {
   def filterAndDedupePurchases(
       purchases: Dataset[PurchaseTransaction],
       startDate: Int,
-      endDate: Int
+      endDate: Int,
   )(implicit spark: SparkSession): Dataset[FilteredPurchaseTransaction] = {
     import spark.implicits._
 
@@ -46,7 +46,7 @@ object UserActivityTransformations {
 
   def enrichUserEventsWithProfiles(
       userEvents: Dataset[FilteredUserEvent],
-      userProfiles: Dataset[UserProfile]
+      userProfiles: Dataset[UserProfile],
   )(implicit spark: SparkSession): Dataset[EnrichedUserEvent] = {
     import spark.implicits._
 
@@ -66,14 +66,14 @@ object UserActivityTransformations {
         coalesce(col("age_group"), lit("unknown")).as("age_group"),
         coalesce(col("country"), lit("unknown")).as("country"),
         coalesce(col("subscription_tier"), lit("free")).as("subscription_tier"),
-        col("partition_date")
+        col("partition_date"),
       )
       .as[EnrichedUserEvent]
   }
 
   def enrichPurchasesWithProfiles(
       purchases: Dataset[FilteredPurchaseTransaction],
-      userProfiles: Dataset[UserProfile]
+      userProfiles: Dataset[UserProfile],
   )(implicit spark: SparkSession): Dataset[EnrichedPurchaseTransaction] = {
     import spark.implicits._
 
@@ -94,14 +94,14 @@ object UserActivityTransformations {
         coalesce(col("age_group"), lit("unknown")).as("age_group"),
         coalesce(col("country"), lit("unknown")).as("country"),
         coalesce(col("subscription_tier"), lit("free")).as("subscription_tier"),
-        col("partition_date")
+        col("partition_date"),
       )
       .as[EnrichedPurchaseTransaction]
   }
 
   def aggregateUserActivity(
       enrichedEvents: Dataset[EnrichedUserEvent],
-      enrichedPurchases: Dataset[EnrichedPurchaseTransaction]
+      enrichedPurchases: Dataset[EnrichedPurchaseTransaction],
   )(implicit spark: SparkSession): Dataset[UserActivitySummary] = {
     import spark.implicits._
 
@@ -114,7 +114,7 @@ object UserActivityTransformations {
         first("device_type").as("most_common_device"),
         first("event_type").as("most_common_event_type"),
         min("event_timestamp").as("first_event_timestamp"),
-        max("event_timestamp").as("last_event_timestamp")
+        max("event_timestamp").as("last_event_timestamp"),
       )
 
     val purchaseAggs = enrichedPurchases
@@ -122,7 +122,7 @@ object UserActivityTransformations {
       .agg(
         count("*").as("total_purchases"),
         sum("purchase_amount").as("total_purchase_amount"),
-        avg("purchase_amount").as("avg_purchase_amount")
+        avg("purchase_amount").as("avg_purchase_amount"),
       )
 
     eventAggs
