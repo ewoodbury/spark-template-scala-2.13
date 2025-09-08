@@ -63,11 +63,16 @@ lazy val root = (project in file("."))
       }
     },
     
-    // Test settings with Java 11+ compatibility
-    Test / parallelExecution := false,
+    Test / parallelExecution := true,
     Test / fork := true,
+    // Enable multiple JVMs for better isolation and parallel execution
+    Test / testForkedParallel := true,
+    // Limit concurrent tests to avoid resource exhaustion  
+    Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-P4"),
     Test / javaOptions ++= Seq(
-      "-Xmx2g",
+      "-Xmx3g", // Increased memory for parallel execution
+      "-XX:+UseG1GC", // Better GC for concurrent workloads
+      "-XX:MaxGCPauseMillis=200",
       "--add-opens=java.base/java.lang=ALL-UNNAMED",
       "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
       "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED",

@@ -6,34 +6,36 @@ import org.apache.spark.sql.expressions.Window
 import com.example.useractivity.model._
 
 object UserActivityTransformations {
-  
+
   def filterAndDedupeUserEvents(
-    userEvents: Dataset[UserEvent], 
-    startDate: Int, 
-    endDate: Int
+      userEvents: Dataset[UserEvent],
+      startDate: Int,
+      endDate: Int
   )(implicit spark: SparkSession): Dataset[FilteredUserEvent] = {
     import spark.implicits._
-    
-    val window = Window.partitionBy("user_id", "session_id", "event_type")
+
+    val window = Window
+      .partitionBy("user_id", "session_id", "event_type")
       .orderBy(desc("event_timestamp"))
-    
+
     userEvents
       .filter(col("partition_date") >= startDate && col("partition_date") <= endDate)
       .filter(col("event_type").isNotNull && col("user_id").isNotNull)
       .withColumn("row_number", row_number().over(window))
       .as[FilteredUserEvent]
   }
-  
+
   def filterAndDedupePurchases(
-    purchases: Dataset[PurchaseTransaction], 
-    startDate: Int, 
-    endDate: Int
+      purchases: Dataset[PurchaseTransaction],
+      startDate: Int,
+      endDate: Int
   )(implicit spark: SparkSession): Dataset[FilteredPurchaseTransaction] = {
     import spark.implicits._
-    
-    val window = Window.partitionBy("transaction_id")
+
+    val window = Window
+      .partitionBy("transaction_id")
       .orderBy(desc("purchase_timestamp"))
-    
+
     purchases
       .filter(col("partition_date") >= startDate && col("partition_date") <= endDate)
       .filter(!col("is_refunded"))
@@ -41,13 +43,13 @@ object UserActivityTransformations {
       .withColumn("row_number", row_number().over(window))
       .as[FilteredPurchaseTransaction]
   }
-  
+
   def enrichUserEventsWithProfiles(
-    userEvents: Dataset[FilteredUserEvent], 
-    userProfiles: Dataset[UserProfile]
+      userEvents: Dataset[FilteredUserEvent],
+      userProfiles: Dataset[UserProfile]
   )(implicit spark: SparkSession): Dataset[EnrichedUserEvent] = {
     import spark.implicits._
-    
+
     userEvents
       .filter(col("row_number") === 1)
       .drop("row_number")
@@ -68,13 +70,13 @@ object UserActivityTransformations {
       )
       .as[EnrichedUserEvent]
   }
-  
+
   def enrichPurchasesWithProfiles(
-    purchases: Dataset[FilteredPurchaseTransaction], 
-    userProfiles: Dataset[UserProfile]
+      purchases: Dataset[FilteredPurchaseTransaction],
+      userProfiles: Dataset[UserProfile]
   )(implicit spark: SparkSession): Dataset[EnrichedPurchaseTransaction] = {
     import spark.implicits._
-    
+
     purchases
       .filter(col("row_number") === 1)
       .drop("row_number")
@@ -96,13 +98,13 @@ object UserActivityTransformations {
       )
       .as[EnrichedPurchaseTransaction]
   }
-  
+
   def aggregateUserActivity(
-    enrichedEvents: Dataset[EnrichedUserEvent],
-    enrichedPurchases: Dataset[EnrichedPurchaseTransaction]
+      enrichedEvents: Dataset[EnrichedUserEvent],
+      enrichedPurchases: Dataset[EnrichedPurchaseTransaction]
   )(implicit spark: SparkSession): Dataset[UserActivitySummary] = {
     import spark.implicits._
-    
+
     val eventAggs = enrichedEvents
       .groupBy("user_id", "username", "age_group", "country", "subscription_tier", "partition_date")
       .agg(
@@ -114,7 +116,7 @@ object UserActivityTransformations {
         min("event_timestamp").as("first_event_timestamp"),
         max("event_timestamp").as("last_event_timestamp")
       )
-    
+
     val purchaseAggs = enrichedPurchases
       .groupBy("user_id")
       .agg(
@@ -122,10 +124,11 @@ object UserActivityTransformations {
         sum("purchase_amount").as("total_purchase_amount"),
         avg("purchase_amount").as("avg_purchase_amount")
       )
-    
+
     eventAggs
       .join(purchaseAggs, Seq("user_id"), "left")
-      .na.fill(0, Seq("total_purchases", "total_purchase_amount", "avg_purchase_amount"))
+      .na
+      .fill(0, Seq("total_purchases", "total_purchase_amount", "avg_purchase_amount"))
       .as[UserActivitySummary]
   }
 }

@@ -1,7 +1,7 @@
 package com.example.useractivity
 
 import scopt.OParser
-import com.example.sparkutils.SparkPlatform
+import com.example.sparkutils.PlatformProvider
 
 object App {
   def main(args: Array[String]): Unit = {
@@ -34,16 +34,16 @@ object App {
         help("help").text("prints this usage text")
       )
     }
-    
+
     OParser.parse(parser, args, Config()) match {
       case Some(config) =>
         try {
           // Initialize production Spark session
-          SparkPlatform.spark
-          
+          PlatformProvider.platform.spark
+
           // Production-specific operations can go here
           // (e.g., setting up Iceberg catalogs, registering UDFs, etc.)
-          
+
           // Run the main ETL pipeline
           UserActivity.run(
             config.startDate,
@@ -52,10 +52,9 @@ object App {
             config.purchasesTable,
             config.outputTable
           )
-          
-        } finally {
-          SparkPlatform.stop()
-        }
+
+        } finally
+          PlatformProvider.platform.stop()
       case _ =>
         // arguments are bad, error message will have been displayed
         System.exit(1)

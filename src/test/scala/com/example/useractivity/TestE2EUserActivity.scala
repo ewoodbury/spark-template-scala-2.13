@@ -33,7 +33,13 @@ class TestE2EUserActivity extends SparkTestBase {
     WriteUtils.writeDatasetToTable(createTestDataset(userProfiles), "lookup_user")
     
     // Execute the job
-    UserActivity.run(20240101, 20240101, "user_events", "purchases", "output_table")
+    UserActivity.run(
+      startDate=20240101, 
+      endDate=20240101, 
+      userEventsTable="user_events", 
+      purchasesTable="purchases", 
+      outputTable="output_table",
+    )
     
     // Read and verify output
     val result = FetchUtils.readTableAsDataset[UserActivitySummary]("output_table")

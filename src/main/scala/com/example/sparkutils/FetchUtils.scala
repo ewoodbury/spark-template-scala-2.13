@@ -3,25 +3,25 @@ package com.example.sparkutils
 import org.apache.spark.sql.{Dataset, DataFrame, Encoder}
 
 object FetchUtils {
-  import SparkPlatform.spark
-  
-  def readTableAsDataFrame(tableName: String): DataFrame = {
-    if (SparkPlatform.isLocal) {
-      SparkPlatform.getLocalTable(tableName)
+  private def platform: SparkPlatformTrait = PlatformProvider.platform
+
+  def readTableAsDataFrame(tableName: String): DataFrame =
+    if (platform.isLocal) {
+      platform
+        .getLocalTable(tableName)
         .getOrElse(throw new RuntimeException(s"Table $tableName not found in local storage"))
         .toDF()
     } else {
-      spark.table(tableName)
+      platform.spark.table(tableName)
     }
-  }
-  
-  def readTableAsDataset[T](tableName: String)(implicit encoder: Encoder[T]): Dataset[T] = {
-    if (SparkPlatform.isLocal) {
-      SparkPlatform.getLocalTable(tableName)
+
+  def readTableAsDataset[T](tableName: String)(implicit encoder: Encoder[T]): Dataset[T] =
+    if (platform.isLocal) {
+      platform
+        .getLocalTable(tableName)
         .getOrElse(throw new RuntimeException(s"Table $tableName not found in local storage"))
         .as[T]
     } else {
-      spark.table(tableName).as[T]
+      platform.spark.table(tableName).as[T]
     }
-  }
 }
