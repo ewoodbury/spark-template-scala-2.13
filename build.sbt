@@ -33,10 +33,17 @@ lazy val root = (project in file("."))
       "org.apache.spark" %% "spark-core" % "3.5.1" % Compile,
       "org.apache.spark" %% "spark-sql" % "3.5.1" % Compile,
       
+      // CLI argument parsing
+      "com.github.scopt" %% "scopt" % "4.1.0",
+      
+      // Iceberg support (production)
+      "org.apache.iceberg" % "iceberg-spark-runtime-3.5_2.13" % "1.4.2" % "provided",
+      
       // Test dependencies (include Spark for testing)
       "org.scalatest" %% "scalatest" % "3.2.17" % Test,
       "org.apache.spark" %% "spark-core" % "3.5.1" % Test,
-      "org.apache.spark" %% "spark-sql" % "3.5.1" % Test
+      "org.apache.spark" %% "spark-sql" % "3.5.1" % Test,
+      "com.holdenkarau" %% "spark-testing-base" % "3.5.0_1.4.7" % Test
     ),
     
     // Assembly settings for fat jar creation
