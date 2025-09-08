@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers
 import com.holdenkarau.spark.testing.DatasetSuiteBase
 import com.example.sparkutils.SparkPlatform
 
-trait SparkTestBase extends AnyFlatSpec with Matchers with DatasetSuiteBase with BeforeAndAfterAll with BeforeAndAfterEach {
+trait TestSparkBase extends AnyFlatSpec with Matchers with DatasetSuiteBase with BeforeAndAfterAll with BeforeAndAfterEach {
   
   override def beforeAll(): Unit = {
     super.beforeAll()

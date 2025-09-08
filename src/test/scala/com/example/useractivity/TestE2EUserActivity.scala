@@ -5,7 +5,7 @@ import com.example.test.SparkTestBase
 import com.example.useractivity.model._
 import com.example.sparkutils.{WriteUtils, FetchUtils}
 
-class UserActivityE2ETest extends SparkTestBase {
+class TestE2EUserActivity extends SparkTestBase {
   
   "complete ETL pipeline" should "process user activity correctly" in {
     import spark.implicits._

@@ -4,7 +4,7 @@ import java.sql.Timestamp
 import com.example.test.SparkTestBase
 import com.example.useractivity.model._
 
-class UserActivityTransformationsTest extends SparkTestBase {
+class TestUserActivityTransformations extends SparkTestBase {
   
   "filterAndDedupeUserEvents" should "filter by date range and deduplicate" in {
     // Arrange    
