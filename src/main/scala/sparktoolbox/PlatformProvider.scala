@@ -1,4 +1,4 @@
-package sparkutils
+package sparktoolbox
 
 /**
  * Production-grade platform provider that automatically selects the appropriate
@@ -17,7 +17,7 @@ package sparkutils
  * 
  * Usage:
  * {{{
- *   import sparkutils.PlatformProvider
+ *   import sparktoolbox.PlatformProvider
  *   
  *   val platform = PlatformProvider.platform
  *   val spark = platform.spark
@@ -57,7 +57,7 @@ object PlatformProvider {
   private def loadTestPlatform: Option[SparkPlatformTrait] = {
     try {
       // Try to load the test platform from the updated package structure
-      val clazz = Class.forName("sparkutils.TestSparkPlatform$")
+      val clazz = Class.forName("sparktoolbox.TestSparkPlatform$")
       val module = clazz.getField("MODULE$").get(null).asInstanceOf[SparkPlatformTrait]
       Some(module)
     } catch {

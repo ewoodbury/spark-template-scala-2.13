@@ -1,4 +1,4 @@
-package sparkutils
+package sparktoolbox
 
 import org.apache.spark.sql.{Dataset, DataFrame, SaveMode}
 import scala.util.{Try, Success, Failure}
@@ -22,20 +22,20 @@ import scala.util.{Try, Success, Failure}
  * 
  * Usage:
  * {{{
- *   import sparkutils.WriteUtils
+ *   import sparktoolbox.Writers
  *   import org.apache.spark.sql.SaveMode
  *   
  *   // Write DataFrame with default overwrite mode
- *   WriteUtils.writeDataFrameToTable(df, "user_events")
+ *   Writers.writeDataFrameToTable(df, "user_events")
  *   
  *   // Write Dataset with append mode
- *   WriteUtils.writeDatasetToTable(ds, "user_events", SaveMode.Append)
+ *   Writers.writeDatasetToTable(ds, "user_events", SaveMode.Append)
  *   
  *   // Write with partitioning for performance
- *   WriteUtils.writeDataFrameToTablePartitioned(df, "user_events", Seq("year", "month"))
+ *   Writers.writeDataFrameToTablePartitioned(df, "user_events", Seq("year", "month"))
  * }}}
  */
-object WriteUtils {
+object Writers {
   
   private def platform: SparkPlatformTrait = PlatformProvider.platform
   

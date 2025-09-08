@@ -1,7 +1,7 @@
 package com.example.useractivity
 
 import org.apache.spark.sql.SparkSession
-import sparkutils.{PlatformProvider, FetchUtils, WriteUtils}
+import sparktoolbox.{PlatformProvider, Fetchers, Writers}
 import com.example.useractivity.model._
 import com.example.useractivity.transformations.UserActivityTransformations
 
@@ -17,9 +17,9 @@ object UserActivity {
     import spark.implicits._
 
     // Read source tables
-    val userEvents   = FetchUtils.readTableAsDataset[UserEvent](userEventsTable)
-    val purchases    = FetchUtils.readTableAsDataset[PurchaseTransaction](purchasesTable)
-    val userProfiles = FetchUtils.readTableAsDataset[UserProfile]("lookup_user")
+    val userEvents   = Fetchers.readTableAsDataset[UserEvent](userEventsTable)
+    val purchases    = Fetchers.readTableAsDataset[PurchaseTransaction](purchasesTable)
+    val userProfiles = Fetchers.readTableAsDataset[UserProfile]("lookup_user")
 
     // Apply transformations
     val filteredEvents =
@@ -36,6 +36,6 @@ object UserActivity {
       UserActivityTransformations.aggregateUserActivity(enrichedEvents, enrichedPurchases)
 
     // Write output
-    WriteUtils.writeDatasetToTable(userActivitySummary, outputTable)
+    Writers.writeDatasetToTable(userActivitySummary, outputTable)
   }
 }

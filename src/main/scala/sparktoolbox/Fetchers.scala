@@ -1,4 +1,4 @@
-package sparkutils
+package sparktoolbox
 
 import org.apache.spark.sql.{Dataset, DataFrame, Encoder}
 import scala.util.{Try, Success, Failure}
@@ -20,17 +20,17 @@ import scala.util.{Try, Success, Failure}
  * 
  * Usage:
  * {{{
- *   import sparkutils.FetchUtils
+ *   import sparktoolbox.Fetchers
  *   
  *   // Read as DataFrame
- *   val df = FetchUtils.readTableAsDataFrame("user_events")
+ *   val df = Fetchers.readTableAsDataFrame("user_events")
  *   
  *   // Read as strongly-typed Dataset
  *   case class UserEvent(id: String, userId: String, event: String)
- *   val ds = FetchUtils.readTableAsDataset[UserEvent]("user_events")
+ *   val ds = Fetchers.readTableAsDataset[UserEvent]("user_events")
  * }}}
  */
-object FetchUtils {
+object Fetchers {
   
   private def platform: SparkPlatformTrait = PlatformProvider.platform
   

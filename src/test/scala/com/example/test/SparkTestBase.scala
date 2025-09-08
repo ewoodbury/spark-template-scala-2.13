@@ -4,7 +4,7 @@ import org.apache.spark.sql.Dataset
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import sparkutils.TestSparkPlatform
+import sparktoolbox.TestSparkPlatform
 
 trait SparkTestBase extends AnyFlatSpec with Matchers with BeforeAndAfterAll with BeforeAndAfterEach {
   

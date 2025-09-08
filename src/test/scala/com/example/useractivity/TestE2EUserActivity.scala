@@ -3,7 +3,7 @@ package com.example.useractivity
 import java.sql.Timestamp
 import com.example.test.SparkTestBase
 import com.example.useractivity.model._
-import sparkutils.{WriteUtils, FetchUtils}
+import sparktoolbox.{Writers, Fetchers}
 
 class TestE2EUserActivity extends SparkTestBase {
   
@@ -28,9 +28,9 @@ class TestE2EUserActivity extends SparkTestBase {
     )
     
     // Write input tables to local storage
-    WriteUtils.writeDatasetToTable(createTestDataset(userEvents), "user_events")
-    WriteUtils.writeDatasetToTable(createTestDataset(purchases), "purchases") 
-    WriteUtils.writeDatasetToTable(createTestDataset(userProfiles), "lookup_user")
+    Writers.writeDatasetToTable(createTestDataset(userEvents), "user_events")
+    Writers.writeDatasetToTable(createTestDataset(purchases), "purchases") 
+    Writers.writeDatasetToTable(createTestDataset(userProfiles), "lookup_user")
     
     // Execute the job
     UserActivity.run(
@@ -42,7 +42,7 @@ class TestE2EUserActivity extends SparkTestBase {
     )
     
     // Read and verify output
-    val result = FetchUtils.readTableAsDataset[UserActivitySummary]("output_table")
+    val result = Fetchers.readTableAsDataset[UserActivitySummary]("output_table")
     val resultList = result.collect().toList
     
     // Assertions

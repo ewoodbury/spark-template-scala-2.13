@@ -1,4 +1,4 @@
-package sparkutils
+package sparktoolbox
 
 import org.apache.spark.sql.SparkSession
 import scala.collection.concurrent.TrieMap
@@ -21,7 +21,7 @@ import scala.util.{Try, Success, Failure}
  * 
  * Usage:
  * {{{
- *   import sparkutils.SparkPlatform
+ *   import sparktoolbox.SparkPlatform
  *   
  *   val spark = SparkPlatform.spark
  *   // Use spark session...
