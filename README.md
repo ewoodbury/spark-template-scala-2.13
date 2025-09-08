@@ -4,11 +4,12 @@ A production-ready template project for Apache Spark applications using Scala 2.
 
 ## Features
 
-- **Scala 2.13 + Spark 3.5**: Latest stable versions for Spark in production
-- **Assembly plugin** - Create fat JAR for deployment
-- **Test setup** - ScalaTest configured with Spark testing utilities
+- **Ready for Development**: Start writing Spark code with no setup required
+- **Clean Workflows**: Run common actions with a single `make` command
+- **Pre-built Test Setup** - Unit and end-to-end data pipelines tests with Spark testing utilities
+- **sbt-assembly Plugin** - Create a fat JAR for deployment with one command
 - **Formatting and Linting** - Pre-configured Scalafmt and Scalafix
-- **Production optimized** - Enhanced compiler flags and runtime configurations
+- **Optimized for Production** - Project is designed for large jobs that operate over billions of records
 
 Note: If you want to try out using Scala 3 with Spark, check out the Scala 3 version [here](https://github.com/ewoodbury/spark-template-scala-3).
 
@@ -52,7 +53,7 @@ make test-lint  # Run linting checks without fixing
 
 1. Compile with `sbt compile`
 2. Run tests with `make test`
-3. Run the sample application with `sbt "runMain com.example.SparkApp"`
+3. Run the sample application in Spark local mode with `sbt "runMain com.example.SparkApp"`
 
 ### Code Quality
 
@@ -61,28 +62,32 @@ make test-lint  # Run linting checks without fixing
 
 ### Building for Deployment
 
-Create a fat JAR for cluster deployment:
+Create a fat JAR for cluster deployment using `sbt-assmebly` plugin:
 ```bash
-sbt assembly
+make build
 ```
 
 The assembled JAR will be created in `target/scala-2.13/` and can be submitted to a Spark cluster using `spark-submit`.
 
-## Why Scala 2.13
+## Why Scala 2.13?
 
-This template uses Scala 2.13, which offers several production advantages over Scala 3:
+This template uses Scala 2.13, the latest Scala version officially supported by Spark.
 
-- **Native Spark compatibility** - No cross-version complications
-- **Mature ecosystem** - Full library compatibility
-- **Scala 3 Compatibility** - Interoperable with Scala 3 syntax, enabling upgrade when Scala 3 is supported by Spark
+It is possible to use Scala 3 with Spark thanks to Scala 2.13 and Scala 3 cross-compatibility, but you may have library issues. As of mid-2025, I recommend sticking to Scala 2.13 for production applications.
 
-### Java Version Notes
+If you want to give Scala 3 a try, check out my Scala 3 version of this same template [here](https://github.com/ewoodbury/spark-template-scala-3).
 
-I highly recommend Java 17 for all new Spark projects, because:
-- **Java 8/11**: Spark supports these versions, but they lack garbage collection optimizations and other performance improvements found in Java 17.
-- **Java 18+**: Not compatible with Spark
+### Java Version
 
-The project includes necessary JVM flags for Java 17, which are automatically applied when using `sbt run` or `make test`.
+You should match your Java version to the version that your production cluster Spark cluster is using.
+
+If you have control, I'd highly recommend Java 17 for all new Spark projects, because:
+- **Java 8/11**: Supported by Spark, b lack garbage collection optimizations and other performance improvements found in Java 17.
+- **Java 18+**: Not compatible with Spark.
+
+The project includes necessary JVM flags for Java 17 by default, which are automatically applied when using `sbt run` or `make test`.
+
+If you need to manage multiple Java versions on your machine, I recommend using [jEnv](https://www.jenv.be/).
 
 ## Dependencies
 
@@ -125,7 +130,7 @@ The template includes Github Actions workflows for regular Scala tests, linting,
 
 ## Production Deployment
 
-1. Build the assembly JAR: `sbt assembly`
+1. Build the assembly JAR: `make build`
 2. Submit to a Spark cluster:
 ```bash
 spark-submit \
