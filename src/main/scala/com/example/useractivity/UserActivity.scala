@@ -1,7 +1,7 @@
 package com.example.useractivity
 
 import org.apache.spark.sql.SparkSession
-import com.example.sparkutils.{PlatformProvider, FetchUtils, WriteUtils}
+import sparkutils.{PlatformProvider, FetchUtils, WriteUtils}
 import com.example.useractivity.model._
 import com.example.useractivity.transformations.UserActivityTransformations
 

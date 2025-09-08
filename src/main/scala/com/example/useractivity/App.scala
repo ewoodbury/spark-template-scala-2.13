@@ -1,7 +1,7 @@
 package com.example.useractivity
 
 import scopt.OParser
-import com.example.sparkutils.PlatformProvider
+import sparkutils.PlatformProvider
 
 object App {
   def main(args: Array[String]): Unit = {

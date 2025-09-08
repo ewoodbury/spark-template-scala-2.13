@@ -3,7 +3,7 @@ package com.example.useractivity
 import java.sql.Timestamp
 import com.example.test.SparkTestBase
 import com.example.useractivity.model._
-import com.example.sparkutils.{WriteUtils, FetchUtils}
+import sparkutils.{WriteUtils, FetchUtils}
 
 class TestE2EUserActivity extends SparkTestBase {
   
