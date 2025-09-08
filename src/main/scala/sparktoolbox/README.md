@@ -2,8 +2,6 @@
 
 A production-ready toolkit for Spark applications that aims to simplify Spark development and enable easy data pipeline testing.
 
-This package is designed with the following be
-
 ## Key Features
 
 ### Testing as a Top Priority
