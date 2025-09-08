@@ -53,7 +53,7 @@ make test-lint  # Run linting checks without fixing
 
 1. Compile with `sbt compile`
 2. Run tests with `make test`
-3. Run the sample application in Spark local mode with `sbt "runMain com.example.SparkApp"`
+3. Run the sample application in Spark local mode with `sbt "runMain com.example.useractivity.App"`
 
 ### Code Quality
 
@@ -105,7 +105,7 @@ If you need to manage multiple Java versions on your machine, I recommend using 
 
 ## Example Usage
 
-See `src/main/scala/com/example/SparkApp.scala` for a complete example of:
+See `src/main/scala/com/example/useractivity/App.scala` for a complete example of:
 - Setting up a Spark session
 - Creating DataFrames with both explicit schemas and case classes
 - Performing transformations and typed operations
@@ -134,7 +134,7 @@ The template includes Github Actions workflows for regular Scala tests, linting,
 2. Submit to a Spark cluster:
 ```bash
 spark-submit \
-  --class com.example.SparkApp \
+  --class com.example.userActivity.App \
   --master yarn \
   --deploy-mode cluster \
   target/scala-2.13/scala-spark-template-213-0.1.0-SNAPSHOT.jar
