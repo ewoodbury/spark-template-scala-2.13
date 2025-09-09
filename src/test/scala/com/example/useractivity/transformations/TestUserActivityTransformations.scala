@@ -11,10 +11,46 @@ class TestUserActivityTransformations extends SparkTestBase {
     import spark.implicits._
     
     val testEvents = Seq(
-      UserEvent("1", "user1", "click", new Timestamp(1000000), "session1", "/page1", "mobile", 20240101),
-      UserEvent("2", "user1", "click", new Timestamp(2000000), "session1", "/page2", "mobile", 20240101), // Latest for dedup
-      UserEvent("3", "user2", "view", new Timestamp(1500000), "session2", "/page1", "desktop", 20240102),
-      UserEvent("4", "user3", "click", new Timestamp(1200000), "session3", "/page3", "tablet", 20240105) // Outside date range
+      UserEvent(
+        event_id = "1",
+        event_type = "click",
+        event_timestamp = new Timestamp(1000000),
+        session_id = "session1",
+        page_url = "/page1",
+        device_type = "mobile",
+        user_id = "user1",
+        partition_date = 20240101
+      ),
+      UserEvent(
+        event_id = "2", 
+        event_type = "click",
+        event_timestamp = new Timestamp(2000000),
+        session_id = "session1",
+        page_url = "/page2",
+        device_type = "mobile",
+        user_id = "user1",
+        partition_date = 20240101
+      ), // Latest for dedup
+      UserEvent(
+        event_id = "3",
+        event_type = "view",
+        event_timestamp = new Timestamp(1500000),
+        session_id = "session2",
+        page_url = "/page1",
+        device_type = "desktop",
+        user_id = "user2",
+        partition_date = 20240102
+      ),
+      UserEvent(
+        event_id = "4",
+        event_type = "click",
+        event_timestamp = new Timestamp(1200000),
+        session_id = "session3",
+        page_url = "/page3",
+        device_type = "tablet",
+        user_id = "user3",
+        partition_date = 20240105
+      ) // Outside date range
     )
     
     val inputDs = createTestDataset(testEvents)
@@ -41,10 +77,50 @@ class TestUserActivityTransformations extends SparkTestBase {
     import spark.implicits._
     
     val testPurchases = Seq(
-      PurchaseTransaction("t1", "user1", "prod1", 99.99, new Timestamp(1000), "credit", "USD", false, 20240101),
-      PurchaseTransaction("t2", "user1", "prod2", 149.99, new Timestamp(2000), "paypal", "USD", true, 20240101), // Refunded
-      PurchaseTransaction("t3", "user2", "prod1", 79.99, new Timestamp(1500), "credit", "USD", false, 20240102),
-      PurchaseTransaction("t4", "user3", "prod3", 199.99, new Timestamp(1200), "debit", "USD", false, 20240105) // Outside date range
+      PurchaseTransaction(
+        transaction_id = "t1",
+        product_id = "prod1",
+        purchase_amount = 99.99,
+        purchase_timestamp = new Timestamp(1000),
+        payment_method = "credit",
+        currency = "USD",
+        is_refunded = false,
+        user_id = "user1",
+        partition_date = 20240101
+      ),
+      PurchaseTransaction(
+        transaction_id = "t2",
+        product_id = "prod2", 
+        purchase_amount = 149.99,
+        purchase_timestamp = new Timestamp(2000),
+        payment_method = "paypal",
+        currency = "USD",
+        is_refunded = true,
+        user_id = "user1",
+        partition_date = 20240101
+      ), // Refunded
+      PurchaseTransaction(
+        transaction_id = "t3",
+        product_id = "prod1",
+        purchase_amount = 79.99,
+        purchase_timestamp = new Timestamp(1500),
+        payment_method = "credit",
+        currency = "USD",
+        is_refunded = false,
+        user_id = "user2",
+        partition_date = 20240102
+      ),
+      PurchaseTransaction(
+        transaction_id = "t4",
+        product_id = "prod3",
+        purchase_amount = 199.99,
+        purchase_timestamp = new Timestamp(1200),
+        payment_method = "debit",
+        currency = "USD",
+        is_refunded = false,
+        user_id = "user3",
+        partition_date = 20240105
+      ) // Outside date range
     )
     
     val inputDs = createTestDataset(testPurchases)
@@ -69,15 +145,72 @@ class TestUserActivityTransformations extends SparkTestBase {
     import spark.implicits._
     
     val filteredEvents = Seq(
-      FilteredUserEvent("1", "user1", "click", new Timestamp(1000), "session1", "/page1", "mobile", 20240101, 1),
-      FilteredUserEvent("2", "user2", "view", new Timestamp(1500), "session2", "/page2", "desktop", 20240101, 1),
-      FilteredUserEvent("3", "user3", "click", new Timestamp(1200), "session3", "/page3", "tablet", 20240101, 1)
+      FilteredUserEvent(
+        event_id = "1",
+        event_type = "click",
+        event_timestamp = new Timestamp(1000),
+        session_id = "session1",
+        page_url = "/page1",
+        device_type = "mobile",
+        user_id = "user1",
+        partition_date = 20240101,
+        row_number = 1
+      ),
+      FilteredUserEvent(
+        event_id = "2",
+        event_type = "view",
+        event_timestamp = new Timestamp(1500),
+        session_id = "session2",
+        page_url = "/page2",
+        device_type = "desktop",
+        user_id = "user2",
+        partition_date = 20240101,
+        row_number = 1
+      ),
+      FilteredUserEvent(
+        event_id = "3",
+        event_type = "click",
+        event_timestamp = new Timestamp(1200),
+        session_id = "session3",
+        page_url = "/page3",
+        device_type = "tablet",
+        user_id = "user3",
+        partition_date = 20240101,
+        row_number = 1
+      )
     )
     
     val userProfiles = Seq(
-      UserProfile("user1", "alice", "alice@example.com", new Timestamp(500), "25-34", "US", "premium", true),
-      UserProfile("user2", "bob", "bob@example.com", new Timestamp(600), "35-44", "UK", "basic", true),
-      UserProfile("user3", "charlie", "charlie@example.com", new Timestamp(700), "18-24", "CA", "premium", false) // Inactive
+      UserProfile(
+        user_id = "user1",
+        username = "alice",
+        age_group = "25-34",
+        country = "US",
+        subscription_tier = "premium",
+        email = "alice@example.com",
+        registration_date = new Timestamp(500),
+        is_active = true
+      ),
+      UserProfile(
+        user_id = "user2",
+        username = "bob",
+        age_group = "35-44",
+        country = "UK",
+        subscription_tier = "basic",
+        email = "bob@example.com",
+        registration_date = new Timestamp(600),
+        is_active = true
+      ),
+      UserProfile(
+        user_id = "user3",
+        username = "charlie",
+        age_group = "18-24",
+        country = "CA",
+        subscription_tier = "premium",
+        email = "charlie@example.com",
+        registration_date = new Timestamp(700),
+        is_active = false
+      ) // Inactive
     )
     
     val eventsDs = createTestDataset(filteredEvents)
@@ -104,14 +237,81 @@ class TestUserActivityTransformations extends SparkTestBase {
     import spark.implicits._
     
     val enrichedEvents = Seq(
-      EnrichedUserEvent("1", "user1", "alice", "click", new Timestamp(1000), "session1", "/page1", "mobile", "25-34", "US", "premium", 20240101),
-      EnrichedUserEvent("2", "user1", "alice", "view", new Timestamp(2000), "session1", "/page2", "mobile", "25-34", "US", "premium", 20240101),
-      EnrichedUserEvent("3", "user2", "bob", "click", new Timestamp(1500), "session2", "/page3", "desktop", "35-44", "UK", "basic", 20240101)
+      EnrichedUserEvent(
+        event_id = "1",
+        event_type = "click",
+        event_timestamp = new Timestamp(1000),
+        session_id = "session1",
+        page_url = "/page1",
+        device_type = "mobile",
+        user_id = "user1",
+        partition_date = 20240101,
+        username = "alice",
+        age_group = "25-34",
+        country = "US",
+        subscription_tier = "premium"
+      ),
+      EnrichedUserEvent(
+        event_id = "2",
+        event_type = "view",
+        event_timestamp = new Timestamp(2000),
+        session_id = "session1",
+        page_url = "/page2",
+        device_type = "mobile",
+        user_id = "user1",
+        partition_date = 20240101,
+        username = "alice",
+        age_group = "25-34",
+        country = "US",
+        subscription_tier = "premium"
+      ),
+      EnrichedUserEvent(
+        event_id = "3",
+        event_type = "click",
+        event_timestamp = new Timestamp(1500),
+        session_id = "session2",
+        page_url = "/page3",
+        device_type = "desktop",
+        user_id = "user2",
+        partition_date = 20240101,
+        username = "bob",
+        age_group = "35-44",
+        country = "UK",
+        subscription_tier = "basic"
+      )
     )
     
     val enrichedPurchases = Seq(
-      EnrichedPurchaseTransaction("t1", "user1", "alice", "prod1", 99.99, new Timestamp(1500), "credit", "USD", false, "25-34", "US", "premium", 20240101),
-      EnrichedPurchaseTransaction("t2", "user2", "bob", "prod2", 149.99, new Timestamp(1600), "paypal", "USD", false, "35-44", "UK", "basic", 20240101)
+      EnrichedPurchaseTransaction(
+        transaction_id = "t1",
+        product_id = "prod1",
+        purchase_amount = 99.99,
+        purchase_timestamp = new Timestamp(1500),
+        payment_method = "credit",
+        currency = "USD",
+        is_refunded = false,
+        user_id = "user1",
+        partition_date = 20240101,
+        username = "alice",
+        age_group = "25-34",
+        country = "US",
+        subscription_tier = "premium"
+      ),
+      EnrichedPurchaseTransaction(
+        transaction_id = "t2",
+        product_id = "prod2",
+        purchase_amount = 149.99,
+        purchase_timestamp = new Timestamp(1600),
+        payment_method = "paypal",
+        currency = "USD",
+        is_refunded = false,
+        user_id = "user2",
+        partition_date = 20240101,
+        username = "bob",
+        age_group = "35-44",
+        country = "UK",
+        subscription_tier = "basic"
+      )
     )
     
     val eventsDs = createTestDataset(enrichedEvents)

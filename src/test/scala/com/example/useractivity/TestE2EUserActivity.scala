@@ -12,19 +12,84 @@ class TestE2EUserActivity extends SparkTestBase {
     
     // Setup input data
     val userEvents = Seq(
-      UserEvent("1", "user1", "click", new Timestamp(1000000), "session1", "/page1", "mobile", 20240101),
-      UserEvent("2", "user1", "view", new Timestamp(2000000), "session1", "/page2", "mobile", 20240101),
-      UserEvent("3", "user2", "click", new Timestamp(1500000), "session2", "/page1", "desktop", 20240101)
+      UserEvent(
+        event_id = "1",
+        event_type = "click", 
+        event_timestamp = new Timestamp(1000000),
+        session_id = "session1",
+        page_url = "/page1",
+        device_type = "mobile",
+        user_id = "user1",
+        partition_date = 20240101
+      ),
+      UserEvent(
+        event_id = "2",
+        event_type = "view",
+        event_timestamp = new Timestamp(2000000), 
+        session_id = "session1",
+        page_url = "/page2",
+        device_type = "mobile",
+        user_id = "user1",
+        partition_date = 20240101
+      ),
+      UserEvent(
+        event_id = "3",
+        event_type = "click",
+        event_timestamp = new Timestamp(1500000),
+        session_id = "session2", 
+        page_url = "/page1",
+        device_type = "desktop",
+        user_id = "user2",
+        partition_date = 20240101
+      )
     )
     
     val purchases = Seq(
-      PurchaseTransaction("t1", "user1", "prod1", 99.99, new Timestamp(1500000), "credit", "USD", false, 20240101),
-      PurchaseTransaction("t2", "user2", "prod2", 149.99, new Timestamp(1600000), "paypal", "USD", false, 20240101)
+      PurchaseTransaction(
+        transaction_id = "t1",
+        product_id = "prod1",
+        purchase_amount = 99.99,
+        purchase_timestamp = new Timestamp(1500000),
+        payment_method = "credit",
+        currency = "USD",
+        is_refunded = false,
+        user_id = "user1",
+        partition_date = 20240101
+      ),
+      PurchaseTransaction(
+        transaction_id = "t2",
+        product_id = "prod2", 
+        purchase_amount = 149.99,
+        purchase_timestamp = new Timestamp(1600000),
+        payment_method = "paypal",
+        currency = "USD",
+        is_refunded = false,
+        user_id = "user2",
+        partition_date = 20240101
+      )
     )
     
     val userProfiles = Seq(
-      UserProfile("user1", "alice", "alice@example.com", new Timestamp(500000), "25-34", "US", "premium", true),
-      UserProfile("user2", "bob", "bob@example.com", new Timestamp(600000), "35-44", "UK", "basic", true)
+      UserProfile(
+        user_id = "user1",
+        username = "alice",
+        age_group = "25-34",
+        country = "US",
+        subscription_tier = "premium",
+        email = "alice@example.com",
+        registration_date = new Timestamp(500000),
+        is_active = true
+      ),
+      UserProfile(
+        user_id = "user2",
+        username = "bob",
+        age_group = "35-44",
+        country = "UK",
+        subscription_tier = "basic",
+        email = "bob@example.com",
+        registration_date = new Timestamp(600000),
+        is_active = true
+      )
     )
     
     // Write input tables to local storage
