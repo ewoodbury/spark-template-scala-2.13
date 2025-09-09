@@ -66,9 +66,8 @@ make test-lint  # Run linting checks without fixing
 
 ### Running the Application
 
-1. Compile with `sbt compile`
+1. Compile with `make compile`
 2. Run tests with `make test`
-3. Run the sample application in Spark local mode with `sbt "runMain com.example.useractivity.App"`
 
 ### Code Quality
 
