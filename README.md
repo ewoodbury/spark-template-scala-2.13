@@ -10,6 +10,7 @@ A production-ready template project for Apache Spark applications using Scala 2.
 - **sbt-assembly Plugin** - Create a fat JAR for deployment with one command
 - **Formatting and Linting** - Pre-configured Scalafmt and Scalafix
 - **Optimized for Production** - Project is designed for large jobs that operate over billions of records
+- **Functional Programming Best Practices** - Idiomatic Scala code with immutability, pure functions, and type safety of all data transformations
 
 Note: If you want to try out using Scala 3 with Spark, check out the Scala 3 version [here](https://github.com/ewoodbury/spark-template-scala-3).
 
@@ -153,3 +154,17 @@ spark-submit \
   --deploy-mode cluster \
   target/scala-2.13/scala-spark-template-213-0.1.0-SNAPSHOT.jar
 ```
+
+
+## Key Principles
+
+The template is built with several opinionated principles in mind that encourage safer, more robust data engineering:
+
+1. Testing as a Top-Priority
+    - Testing is fully setup from the start. All new logic should be covered as a baseline expectation, just like more traditional software engineering projects.
+2. Type Safety
+    - The project uses Scala traits and case classes to define the schema not only of each table, but also of each intermediate dataframe. This makes the transformations clear to develoeprs, and it can help catch errors during compilation.
+3. Pure Functions and Immutability
+    - Every transformation function is pure, with no side effects or dependency on external state. This makes the code easier to reason about and test. Dataframes are never modified in place; instead, new dataframes are returned from each transformation.
+
+I encourage you to follow these principles when building out your own data pipelines, whether or not you're using this template.

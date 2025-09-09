@@ -10,6 +10,18 @@ test-lint: ## Run linting without fixing
 	sbt "scalafixAll --check"
 	sbt scalafmtCheck
 
+.PHONY: shell
+shell: ## Start an sbt shell
+	sbt
+
+.PHONY: compile
+compile: ## Compile the project
+	sbt compile
+
+.PHONY: clean-compile
+clean: ## Clean and compile the project
+	sbt clean compile
+
 .PHONY: test
 test: ## Run tests
 	sbt test
